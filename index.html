@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+	<!-- 阿里字体图标库 -->
+	<link rel="stylesheet" type="text/css" href="fonts/ali-iconfont/iconfont.css"/>
+    
+	
+	<script type="text/javascript" charset="utf-8">
+      	mui.init();
+				
+		mui.plusReady(function () {
+		    //定义子页面数组
+			var subPages=['renting.html','demanding.html','trusting.html','mine.html']
+			//定义子页面样式,一般要设置上下外边距使其不遮挡父页面的头部和底部
+			var subPageStyle={
+				top: "0px", //不可省略
+				bottom: "50px"
+			}
+			//获取父webview，也就是当前正在显示的webview，用于后面把子webview添加到父webview中
+			var mainWebView = plus.webview.currentWebview()
+			
+			//遍历子页面数组，根据每个子页面url创建WebView
+			subPages.forEach((subPage,index)=>{
+				//plus.webview.create()是创建webview的方法
+				//参数1：url，用于指定哪个web页面创建WebView
+				//参数2：id,为每个webview指定一个标识符，用于后面控制显示
+				//参数3：style，为当前创建的webview设置样式，使其不能遮挡父webview的头部和底部				
+				var subWebView = plus.webview.create(subPage,subPage,subPageStyle)				
+				//子webview默认是隐藏状态, 下面的hide方法是默认的
+				subWebView.hide()
+				//将创建的子webview添加到父webview中，就可在父webview中控制子webview的显示与隐藏
+				mainWebView.append(subWebView)
+			})
+			//当进入主页时，设置第一个子webView显示,参数是子webView的id
+			plus.webview.show(subPages[0])
+			
+			// 给底部导航栏注册用户轻击事件，已完成特定子webview的显示
+			//单一元素注册事件方法 ：dom.addEventListener(事件名,事件回调函数)
+			//批量注册事件方法：mui(父选择器).on(事件名,子选择器,事件回调函数)
+			mui('.mui-bar-tab').on('tap','a',function(){
+				//子webview的id值，就是当前点击元素的href属性值
+				var webViewId = this.getAttribute('href')
+				//根据id显示相应的子webview
+				plus.webview.show(webViewId)
+			})
+		})
+    </script>
+	
+</head>
+<body>
+	
+	<!-- 子页面公共模板，内容通过webview方式动态从子页面加载显示 -->
+	
+	<!-- 子页面公共底导航选项卡 -->
+	<nav class="mui-bar mui-bar-tab">
+		<a class="mui-tab-item mui-active" href="renting.html">
+			<span class="mui-icon mui-icon-home"></span>
+			<span class="mui-tab-label">租房</span>
+		</a>
+		<a class="mui-tab-item" href="demanding.html">
+			<span class="mui-icon iconfont icon-demand"></span>
+			<span class="mui-tab-label">求租</span>
+		</a>
+		<a class="mui-tab-item" href="trusting.html">
+			<span  class="mui-icon iconfont icon-tuoguan" ></span>
+			<span class="mui-tab-label">托管</span>
+		</a>
+		<a class="mui-tab-item" href="mine.html">
+			<span class="mui-icon mui-icon-person"></span>
+			<span class="mui-tab-label">我的</span>
+		</a>
+		
+	</nav>
+</body>
+</html>

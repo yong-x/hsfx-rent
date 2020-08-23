@@ -1,0 +1,45 @@
+/* 顶部内容背景色 */
+.mui-bar-nav{
+	background-color: black;
+}
+/* 顶部内容颜色 */
+.mui-title,.mui-bar-nav a{
+	color: white;
+}
+
+/* 设置头部区中搜索图标超链接样式靠右 */
+.mui-bar-nav .right-search{  
+	position: absolute;
+	right: 15px;
+}
+/* 设置头部区中添加图标超链接样式靠右 */
+.mui-bar-nav .right-add{  
+	position: absolute;	
+	right: 50px;
+}
+/* 按搜索后弹出搜索表单的样式 */
+.mui-popover.condition-serach-form{
+	position: fixed;
+	top: 44px;
+	left: 0px !important;
+	width: 100%;
+}
+
+/* 设置弹出菜单的三角箭头不显示 */
+.mui-popover-arrow{
+	display: none;
+}
+/*设置搜索表单行样式 */
+.condition-serach-form .mui-input-row{
+	display: flex;				
+}
+/* 设置搜索表单label宽度 */
+.mui-input-row label{
+	width: 45%;				
+}
+/* 设置搜索表单按钮样式 */
+.condition-serach-form .mui-input-row .form-btn{
+	display: flex;
+	justify-content: center;
+	align-items: center;				
+}

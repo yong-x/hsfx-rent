@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/common.css"/>
+		
+		
+	</head>
+
+	<body>
+		
+		<script src="../js/mui.js"></script>
+		<!-- 数据模板插件 -->
+		<script src="../js/template-web.js"></script>
+		<!-- jquery -->
+		<script src="../js/jquery-1.11.3/jquery-1.11.3.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init()
+			//根据其它页面打开本窗口时所传递的参数来渲染本页面
+			mui.plusReady(function(){
+				//1、获取当前webview
+				var curWebview = plus.webview.currentWebview()
+				//2、根据当前webview，获取openWindow方法调用打开本窗口时的传递的参数extras
+				var house = curWebview.house
+				//3、根据参数从服务器发起请求渲染页面
+				var templateData = {house: house}
+				var househtml = template('test1', templateData)
+				$('#content').html(househtml)
+				//mui.toast(JSON.stringify(house))
+				
+				//4、给电话图标绑定点击事件，可以拨打电话
+				document.getElementById('publisher-phone').addEventListener('tap',function(){
+					var phone_number = this.innerHTML;
+					plus.device.dial(phone_number, true);			
+				})
+			})
+		</script>
+		
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">房屋详情</h1>
+		</header>
+		
+		<div id="content" class="mui-content">
+			房屋详情
+		</div>
+		
+		<!-- 主体内容区渲染模板 -->
+		<script id="test1" type="text/html">					
+			
+				<div class="mui-card">
+					<div class="mui-card-header" style="font-size: 20px;font-weight: bold;"><span>{{house.publisher}}</span><p>发布于 {{house.publish_time}}</p></div>
+					<div class="mui-card-content">						
+						<div class="mui-card-content-inner">
+							{{each house.imglist img index }}
+								<img src="../{{img}}" style="width: 100%;">	
+							{{/each}}												
+						</div>
+						<div class="mui-card-content-inner">
+							<!-- 显示房屋标签，相邻的标签显示不同颜色（样式） -->
+							<h3 style="margin-bottom: 15px;">房屋标签</h3>
+							{{each house.taglist tag tag_index}}
+								{{if tag_index%5===0}}
+									{{set classname='mui-badge-purple'}}
+								{{else if tag_index%5===1}}
+									{{set classname='mui-badge-blue'}}
+								{{else if tag_index%5===2}}
+									{{set classname='mui-badge-green'}}
+								{{else if tag_index%5===3}}
+									{{set classname='mui-badge-danger'}}
+								{{else if tag_index%5===4}}
+									{{set classname='mui-badge-primary'}}						
+								{{/if}}
+								<span style="font-size: 20px;" class="mui-badge {{classname}}">{{tag}}</span>				
+							{{/each}}
+						</div>
+						<div class="mui-card-content-inner">
+							<h3 style="margin-bottom: 15px;">详情描述</h3>
+							<p style="font-size: 20px;">{{house.house_detail}}</p>
+						</div>
+						<div class="mui-card-content-inner">
+							
+							<a class="send" href="http://api.map.baidu.com/geocoder?address={{house.house_address}}&output=html&src=webapp.baidu.openAPIdemo">
+								<span class="mui-icon mui-icon-location" style="font-size: 20px;">{{house.house_address}}</span>
+								</a>
+						</div>
+					</div>
+					<div class="mui-card-footer" style="font-size: 20px;">
+						<label>月租金:&nbsp;<span style="color: red;">￥{{house.price_monthly}}</span></label>
+						<span id="publisher-phone" class="mui-icon mui-icon-phone" style="color: #2AC845;font-size: 20px;">{{house.publisher_phone}}</span>
+					</div>
+				</div>
+			
+		</script>
+	</body>
+
+</html>

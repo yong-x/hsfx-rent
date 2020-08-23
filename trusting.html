@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		
+		<link href="css/mui.css" rel="stylesheet" />
+		<!-- 自定义页面样式 -->
+		<link rel="stylesheet" type="text/css" href="css/common.css"/>
+		<!-- 时间选择器控间样式 -->
+		<link rel="stylesheet" type="text/css" href="css/mui.picker.min.css" />
+		
+		
+		<style>
+		    [v-cloak] { /*vue渲染时闪现遮罩*/ 
+		      display: none;
+		    }
+		</style>
+	</head>
+
+
+	<body>
+		<script src="js/mui.js"></script>
+		<!-- 时间选择器控间插件 -->
+		<script src="js/mui.picker.min.js"></script>
+		<!-- 数据模板插件 -->
+	<!-- 	<script src="js/template-web.js"></script> -->
+		<!-- jquery -->
+<!-- 		<script src="js/jquery-1.11.3/jquery-1.11.3.js" type="text/javascript" charset="utf-8"></script>		
+ -->		
+		<!-- 自定义时时间选择器绑定元素插件 -->
+		<script src="js/my-date-picker.js" type="text/javascript" charset="utf-8"></script>
+		<!-- vue核心 -->
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		
+		<div id="main-content">		
+			<!-- 头部区域 -->
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+				<h1 class="mui-title">小学生托管</h1>
+				
+				<!-- 右侧加号图标 -->
+				<a id="add" href="javascript:;" class="right-add">
+					<span  class="mui-icon mui-icon-plusempty"></span>			
+				</a>
+				<!-- 右侧搜索图标 -->
+				<a href="#popover" id="openPopover" class="right-search">
+					<span  class="mui-icon mui-icon-search"></span>			
+				</a>			
+			</header>
+			<!-- 弹出搜索表单区内容 -->
+			<div id="popover-search-form" class="mui-popover condition-serach-form" >
+			  <form class="mui-input-group">			  	
+				<div class="mui-input-row">
+			  		<label>月&nbsp;&nbsp;租&nbsp;&nbsp;金</label>
+			  		<input v-model="min_price" type="number" class="mui-input-clear" placeholder="最低租金">
+			  		<input v-model="max_price" type="number" class="mui-input-clear" placeholder="最高租金">
+			  	</div>
+				<div class="mui-input-row">
+			  		<label>发布时间</label>
+			  		<input id="start-time"  type="text" class="mui-input-clear date-picker" placeholder="起始时间">
+			  		<input id="end-time"  type="text" class="mui-input-clear date-picker" placeholder="结束时间">
+			  	</div>
+				<div class="mui-input-row" style="display: flex;justify-content: space-around;">
+			  		<button v-on:tap="search" type="button" class="mui-btn mui-btn-blue form-btn">搜索</button>
+			  		<button type="button" class="mui-btn mui-btn-grey form-btn">重置</button>
+			  	</div>
+			  </form>
+			</div>
+			<!-- 主体内容区域 -->
+			<div id="content" class="mui-content">
+				<div v-for="(trusing, index) in trusingList" v-cloak class="mui-card" :data-index="index">
+					<div class="mui-card-header" style="font-size: 20px;"><span>{{trusing.trusting_publisher}}</span><p>发布于 {{trusing.publish_time}}</p></div>
+					<div class="mui-card-content">
+						<div class="mui-card-content-inner">
+							<p class="mui-ellipsis">{{trusing.trusing_detail}}
+							</p>
+						</div>
+					</div>
+					<div class="mui-card-footer" style="font-size: 20px;">
+						<label>最高月托管费:&nbsp;<span style="color: red;">￥{{trusing.price_monthly}}</span></label>				
+					</div>
+				</div>			
+			</div>
+		</div>
+		<script src="js/axios/axios.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/my-http-axios.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+		mui.init()
+		mui.plusReady(function () {	 		
+			var vm = new Vue({
+				el: '#main-content',
+				data:{
+					trusingList:[ //主体内容区内容列表
+						{trustingid:'1',trusting_publisher: '赵先生',publish_time: '2018-09-22',price_monthly: 6000,publisher_phone: '13297215689',trusing_detail:'需要儿童托管	需要儿童托管	需要儿童托管	需要儿童托管'},
+						{trustingid:'2',trusting_publisher: '钱先生',publish_time: '2018-10-22',price_monthly: 7000,publisher_phone: '13297215689',trusing_detail:'需要儿童托管	需要儿童托管	需要儿童托管	需要儿童托管'},
+						{trustingid:'3',trusting_publisher: '孙先生',publish_time: '2020-06-22',price_monthly: 5000,publisher_phone: '13297215689',trusing_detail:'需要儿童托管	需要儿童托管	需要儿童托管	需要儿童托管'},
+						{trustingid:'4',trusting_publisher: '李先生',publish_time: '2020-05-20',price_monthly: 8000,publisher_phone: '13297215689',trusing_detail:'需要儿童托管	需要儿童托管	需要儿童托管	需要儿童托管'},
+						{trustingid:'5',trusting_publisher: '周先生',publish_time: '2020-08-15',price_monthly: 3000,publisher_phone: '13297215689',trusing_detail:'需要儿童托管	需要儿童托管	需要儿童托管	需要儿童托管'},
+						{trustingid:'6',trusting_publisher: '吴先生',publish_time: '2019-09-02',price_monthly: 8000,publisher_phone: '13297215689',trusing_detail:'需要儿童托管	需要儿童托管	需要儿童托管	需要儿童托管'},
+						{trustingid:'7',trusting_publisher: '郑先生',publish_time: '2020-07-25',price_monthly: 5000,publisher_phone: '13297215689',trusing_detail:'需要儿童托管	需要儿童托管	需要儿童托管	需要儿童托管'}
+					],					
+					/*搜索表单内容,时间选择器无法绑定*/
+					min_price: '',
+					max_price: ''										
+				},
+				methods:{
+					/*时间选择器表单项由于用外部插件赋值所以无法像min_price和max_price一样用v-model双向绑定，所以这里用方法来获取*/
+					getStartTime(){ //弹出搜索表单的开始时间项
+						return mui('#start-time')[0].value
+					},
+					getEndTime(){   //弹出搜索表单的结束时间项
+						return mui('#end-time')[0].value
+					},
+					search(){  //按搜索时进行搜索，根据搜索表单向服务器请求数据						
+						//mui.toast(this.min_price+' + '+this.max_price+' + '+ this.getStartTime()+' + '+this.getEndTime())
+						myaxios.post(
+						`/retrieveTrusting`, 
+						{
+							min_price: this.min_price,
+							max_price: this.max_price,
+							getStartTime: this.getStartTime(),
+							getEndTime: this.getEndTime()
+						}
+						).then(function (response) {
+							let data= response.data //服务器数据域，应该用于对绑定的数据trusingList进行赋值
+							console.log(JSON.stringify(response));
+							console.log(JSON.stringify(data));
+							mui.toast("检索成功！",{ duration:'2000ms', type:'div' })
+							mui('#popover-search-form').popover('hide')
+							
+						  })
+						  .catch(function (error) {
+							console.log(error);
+							mui.toast("服务器异常，请稍后重试！",{ duration:'2000ms', type:'div' })
+							mui('#popover-search-form').popover('hide')
+																					
+						  });
+					
+					}				
+					
+				},
+				mounted() {
+					/*1、头部搜索图标点击时，弹出搜索表单*/
+					document.getElementById('openPopover').addEventListener('tap',function(){
+						mui('#popover-search-form').popover('show')
+					})
+					/*2、获取表单中所有时间选择器控件，用自定义函数绑定相应事件回调函数，点击该元素弹出时间选择器*/
+					bindingDataPicker('.date-picker',mui)
+					/*3、头部加号图标点击时，弹出添加托管新窗口*/
+					document.getElementById('add').addEventListener('tap',function(){
+						mui.openWindow({
+						    url:'trusting/newtrust.html',
+						    id:'trusting/newtrust.html',						    
+						    //extras:{},
+						    createNew:false,//是否重复创建同样id的webview，默认为false:不重复创建，直接显示
+						    show:{
+						      autoShow:true,//页面loaded事件发生后自动显示，默认为true
+						      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+						      duration:100//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+						    },
+						    waiting:{
+						      autoShow:true,//自动显示等待框，默认为true
+						      title:'正在加载...',//等待对话框上显示的提示内容						      
+						    }
+						})
+					})
+				}
+			})
+		})
+	</script>	
+	</body>
+
+</html>

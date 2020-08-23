@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../css/common.css" rel="stylesheet" />
+		<style type="text/css">
+			.newdemand-form h4{
+				margin-top: 20px;
+			}
+			.newdemand-form input,
+			.newdemand-form textarea{
+				font-size: 15px;
+			}
+			.newdemand-form textarea{
+				height: 20vh;
+			}
+			
+		</style>
+	</head>
+
+	<body>
+		<!-- 头部区域 -->
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">发布求租需求</h1>									
+		</header>
+		<div class="mui-content">
+			<form class="newdemand-form">
+				<h4>求租房源关键词</h4>
+				<div class="mui-input-row">
+					<!-- <label>input</label> -->
+					<input id="taglist" type="text" class="mui-input-clear" placeholder="关键词用于房东检索查询">
+				</div>		
+				<h4>求租详细描述</h4>
+				<div class="mui-input-row">
+					<textarea id="demand_detail" class="mui-input-clear" placeholder="请详细描述你的求租需求"></textarea>
+				</div>
+				<h4>期望月租金(元)</h4>
+				<div class="mui-input-row">
+					<!-- <label>input</label> -->
+					<input id="price_monthly" type="number" class="mui-input-clear" placeholder="请输入期望的每月租金">
+				</div>
+				<button id="submit" type="button" class="mui-btn mui-btn-primary mui-btn-block" style="margin-top: 30px;">提交</button>
+			</form>			
+		</div>
+		
+		<script src="../js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			mui.plusReady(function () {
+			    document.getElementById('submit').addEventListener('tap',function(){
+					let taglist = mui('#taglist')[0].value
+					let demand_detail = mui('#demand_detail')[0].value
+					let price_monthly = mui('#price_monthly')[0].value
+					let publisher_phone = '13433694568'  //应该从session中读取当前用户的手机号，随表单一起提交，便于服务器识别提交用户
+				
+					//mui.toast(taglist+'--'+demand_detail+'--'+price_monthly+'--'+publisher_phone)
+					//mui.post()
+				})
+			})
+		</script>
+	</body>
+
+</html>

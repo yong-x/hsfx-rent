@@ -1,0 +1,214 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		
+		<link href="css/mui.css" rel="stylesheet" />
+		<!-- 自定义页面样式 -->
+		<link rel="stylesheet" type="text/css" href="css/common.css"/>
+		<!-- 时间选择器控间样式 -->
+		<link rel="stylesheet" type="text/css" href="css/mui.picker.min.css" />
+	</head>
+
+
+	<body>
+		<!-- mui核心库 -->
+		<script src="js/mui.js"></script>		
+		<!-- 时间选择器控间插件 -->
+		<script src="js/mui.picker.min.js"></script>
+		<!-- 数据模板插件 -->
+		<script src="js/template-web.js"></script>
+		<!-- jquery -->
+		<script src="js/jquery-1.11.3/jquery-1.11.3.js" type="text/javascript" charset="utf-8"></script>		
+		<!-- 自定义时时间选择器绑定元素插件 -->
+		<script src="js/my-date-picker.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init()
+			mui.plusReady(function () {
+				//1、从搜索表单获取检索数据后，从服务器请求数据
+				var templateData = {
+					list: [
+						{
+							demandid: '1',
+							demand_publisher: '陈先生',
+							publish_time: '2020-08-22',
+							demand_detail: `需要在华师附小旁找一个二室一厅的房源，要求距离华师附小不超过10km，交通方便，带
+											独立卫生间，独立厨房，朝阳。需要在华师附小旁找一个二室一厅的房源，要求距离华师附小不超过10km，交通方便，带
+											独立卫生间，独立厨房，朝阳。需要在华师附小旁找一个二室一厅的房源，要求距离华师附小不超过10km，交通方便，带
+											独立卫生间，独立厨房，朝阳。需要在华师附小旁找一个二室一厅的房源，要求距离华师附小不超过10km，交通方便欢迎有房源的朋友与我联系`,
+							price_monthly: 2000,
+							publisher_phone: '13297215689',
+							taglist:['朝阳','独立卫生间','免费停车场','独立厨房','精装修','交通方便']
+						},
+						{
+							demandid: '2',
+							demand_publisher: '王小姐',
+							publish_time: '2020-08-22',
+							demand_detail: `需要在华师附小旁找一个二室一厅的房源，要求距离华师附小不超过10km，交通方便，带
+											独立卫生间，独立厨房，朝阳。需要在华师附小旁找一个二室一厅的房源，要求距离华师附小不超过10km，交通方便，带
+											独立卫生间，独立厨房，朝阳。需要在华师附小旁找一个二室一厅的房源，要求距离华师附小不超过10km，交通方便，带
+											独立卫生间，独立厨房，朝阳。需要在华师附小旁找一个二室一厅的房源，要求距离华师附小不超过10km，交通方便欢迎有房源的朋友与我联系`,
+							price_monthly: 3000,
+							publisher_phone: '13297215689',
+							taglist:['朝阳','独立卫生间','免费停车场','独立厨房','精装修','交通方便']
+						},
+						{
+							demandid: '3',
+							demand_publisher: '李先生',
+							publish_time: '2020-08-22',
+							demand_detail: `需要在华师附小旁找一个二室一厅的房源，要求距离华师附小不超过10km，交通方便，带
+											独立卫生间，独立厨房，朝阳。需要在华师附小旁找一个二室一厅的房源，要求距离华师附小不超过10km，交通方便，带
+											独立卫生间，独立厨房，朝阳。需要在华师附小旁找一个二室一厅的房源，要求距离华师附小不超过10km，交通方便，带
+											独立卫生间，独立厨房，朝阳。需要在华师附小旁找一个二室一厅的房源，要求距离华师附小不超过10km，交通方便欢迎有房源的朋友与我联系`,
+							price_monthly: 5000,
+							publisher_phone: '13297215689',
+							taglist:['朝阳','独立卫生间','免费停车场','独立厨房','精装修','交通方便']
+						}
+					]
+				}				
+				var househtml = template('test1', templateData)
+				$('#content').html(househtml)
+				//2、给每个mui-card绑定轻触事件，显示卡片内容详情
+				mui('#content').on('tap','.mui-card',function(){
+					//获取当前需求对象在list中的索引，这里也可以获取对象在数据库中的id，利用id再向服务器请求数据
+					var demand_index = this.getAttribute('data-index')
+					//mui.toast(demand_index)
+					
+					mui.openWindow({
+					    url:'demanding/demand.html',
+					    id:'demanding/demand.html',					    
+					    extras:{
+					      demand: templateData.list[demand_index] //自定义扩展参数，可以用来处理页面间传值
+					    },
+					    createNew:false,//是否重复创建同样id的webview，默认为false:不重复创建，直接显示
+					    show:{
+					      autoShow:true,//页面loaded事件发生后自动显示，默认为true
+					      aniShow:"slide-in-right",//页面显示动画，默认为”slide-in-right“；
+					      duration:100 //页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+					    },
+					    waiting:{
+					      autoShow:true,//自动显示等待框，默认为true
+					      title:'正在加载...',//等待对话框上显示的提示内容					     
+					    }
+					})
+				})				
+				/*3：点击搜索图标时，显示搜索表单；点击遮罩部分时会自动隐藏搜索表单*/
+				document.getElementById('openPopover').addEventListener('tap',function(){
+					mui('#popover-search-form').popover('show')
+				})
+				/*4、：获取表单中所有时间选择器控件，用自定义函数绑定相应事件回调函数，点击该元素弹出时间选择器*/
+				bindingDataPicker('.date-picker',mui)
+					
+				/*5：点击头部中加号时，打开添加求租窗口*/
+				document.getElementById('add').addEventListener('tap',function(){
+					mui.openWindow({
+					    url:'demanding/newdemand.html',
+					    id:'demanding/newdemand.html',
+					   
+					   // extras:{},
+					    createNew:false,//是否重复创建同样id的webview，默认为false:不重复创建，直接显示
+					    show:{
+					      autoShow:true,//页面loaded事件发生后自动显示，默认为true
+					      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+					      duration:200//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+					    },
+					    waiting:{
+					      autoShow:true,//自动显示等待框，默认为true
+					      title:'正在加载...',//等待对话框上显示的提示内容					      
+					    }
+					})
+				})
+			})
+		</script>		
+		<!-- 头部区域 -->
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">求租</h1>
+			
+			<!-- 右侧加号图标 -->
+			<a id="add" href="javascript:;" class="right-add">
+				<span  class="mui-icon mui-icon-plusempty"></span>			
+			</a>
+			<!-- 右侧搜索图标 -->
+			<a href="#popover" id="openPopover" class="right-search">
+				<span  class="mui-icon mui-icon-search"></span>			
+			</a>
+			
+		</header>
+		<!-- 弹出搜索表单区内容 -->
+		<div id="popover-search-form" class="mui-popover condition-serach-form" >
+		  <form class="mui-input-group">
+		  	<div class="mui-input-row">
+		  		<label>关&nbsp;&nbsp;键&nbsp;&nbsp;词</label>
+		  		<input type="text" class="mui-input-clear" placeholder="请输入房屋关键词">
+		  	</div>
+			<div class="mui-input-row">
+		  		<label>月&nbsp;&nbsp;租&nbsp;&nbsp;金</label>
+		  		<input type="number" class="mui-input-clear" placeholder="最低租金">
+		  		<input type="number" class="mui-input-clear" placeholder="最高租金">
+		  	</div>
+			<div class="mui-input-row">
+		  		<label>发布时间</label>
+		  		<input type="text" class="mui-input-clear date-picker" placeholder="起始时间">
+		  		<input type="text" class="mui-input-clear date-picker" placeholder="结束时间">
+		  	</div>
+			<div class="mui-input-row" style="display: flex;justify-content: space-around;">
+		  		<button type="button" class="mui-btn mui-btn-blue form-btn">搜索</button>
+		  		<button type="button" class="mui-btn mui-btn-grey form-btn">重置</button>
+		  	</div>
+		  </form>
+		</div>
+		
+		<!-- 主内容区，等待数据模板动态渲染 -->
+		<div id="content" class="mui-content">
+			<!-- <div class="mui-card" data-demandid="1">
+				<div class="mui-card-header" style="font-size: 20px;"><span>李先生</span><p>发布于 2020-05-05</p></div>
+				<div class="mui-card-content">
+					<div class="mui-card-content-inner">
+						<p class="mui-ellipsis">需要在华师附小旁找一个二室一厅的房源，要求距离华师附小不超过10km，交通方便，带
+						独立卫生间，独立厨房，朝阳。需要在华师附小旁找一个二室一厅的房源，要求距离华师附小不超过10km，交通方便，带			
+						</p>
+					</div>
+				</div>
+				<div class="mui-card-footer" style="font-size: 20px;">
+					<label>最高月租金:&nbsp;<span style="color: red;">￥2999</span></label>				
+				</div>
+			</div> -->			
+		</div>
+		<!-- 主内容区数据模板 -->
+		<script id="test1" type="text/html">
+			{{each list demand index}}
+				<div class="mui-card" data-index="{{index}}">
+					<div class="mui-card-header" style="font-size: 20px;"><span>{{demand.demand_publisher}}</span><p>发布于 {{demand.publish_time}}</p></div>
+					<div class="mui-card-content">
+						<div class="mui-card-content-inner">
+							<p class="mui-ellipsis">{{demand.demand_detail}}</p>
+							<!-- 显示房屋标签，相邻的标签显示不同颜色（样式） -->
+							{{each demand.taglist tag tag_index}}
+								{{if tag_index%5===0}}
+									{{set classname='mui-badge-purple'}}
+								{{else if tag_index%5===1}}
+									{{set classname='mui-badge-blue'}}
+								{{else if tag_index%5===2}}
+									{{set classname='mui-badge-green'}}
+								{{else if tag_index%5===3}}
+									{{set classname='mui-badge-danger'}}
+								{{else if tag_index%5===4}}
+									{{set classname='mui-badge-primary'}}						
+								{{/if}}
+								<span style="font-size: 15px;" class="mui-badge {{classname}}">{{tag}}</span>				
+							{{/each}}
+						</div>
+					</div>
+					<div class="mui-card-footer" style="font-size: 20px;">
+						<label>最高月租金:&nbsp;<span style="color: red;">￥{{demand.price_monthly}}</span></label>				
+					</div>
+				</div>
+			{{/each}}
+		</script>
+	</body>
+
+</html>

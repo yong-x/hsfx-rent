@@ -1,0 +1,30 @@
+{
+  "id": "2019436",
+  "name": "hsfx-iconfont",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "285715",
+      "name": "demand",
+      "font_class": "demand",
+      "unicode": "e65e",
+      "unicode_decimal": 58974
+    },
+    {
+      "icon_id": "450595",
+      "name": "demand",
+      "font_class": "iconfontzuanshi",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "15694720",
+      "name": "托管",
+      "font_class": "tuoguan",
+      "unicode": "e63b",
+      "unicode_decimal": 58939
+    }
+  ]
+}

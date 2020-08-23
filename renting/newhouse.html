@@ -1,0 +1,57 @@
+<!doctype html>
+<html >
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../css/common.css" rel="stylesheet" />
+		<!-- 文件上传表单自定义样式，主要用来设置上传图片的样式，预览 -->
+		<link rel="stylesheet" type="text/css" href="../css/file-form.css"/>
+	</head>
+
+	<body>
+		
+		
+		
+		
+		<!-- 头部区域 -->
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">发布房源信息</h1>									
+		</header>
+		
+		<div class="mui-content file-form">
+			<h4 class="row-title">房源标签(房源特征，以空格分隔)</h4>
+			<div class="mui-input-row">
+				<input id='taglist' type="text" class="mui-input-clear " placeholder="标签用于用户检索" />
+			</div>
+			<h4 class="row-title">详细描述</h4>
+			<div class="row mui-input-row">
+				<textarea id='house_detail' class="mui-input-clear question" placeholder="请详细描述你的房源"></textarea>
+			</div>
+			<h4 class="row-title">房源地址</h4>
+			<div class="mui-input-row">
+				<input id='house_address' type="text" class="mui-input-clear " placeholder="输入房源的详细地址" />
+			</div>
+			<h4 class="row-title">期望月租金(元)</h4>
+			<div class="mui-input-row">
+				<input id='price_monthly' type="number" class="mui-input-clear " placeholder="输入期望的月租金" />
+			</div>
+			<h4 class="row-title">房源图片(最多6张)</h4>
+			<div id='imglist' class="row image-list"></div>
+			<!-- 隐藏域提交用户的电话号，用于后端服务器识别当前上传用户 -->
+			<input id="publisher_phone" type="hidden" value="13298745689" />
+			<button id="submit" type="button" class="mui-btn mui-btn-primary mui-btn-block" style="margin-top: 30px;">提交</button>
+		</div>
+	<script src="../js/mui.js"></script>	
+	<!-- 上传表单脚本，必须放在文档最下面才能有效 -->	
+	<script src="../js/file-form.js"></script>
+	<script type="text/javascript">
+		mui.init()	
+		mui('.mui-scroll-wrapper').scroll();
+	</script>
+	</body>
+
+</html>
