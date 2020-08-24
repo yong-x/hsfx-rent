@@ -11,7 +11,12 @@
     
 	
 	<script type="text/javascript" charset="utf-8">
-      	mui.init();
+      	mui.init({
+	//该属性禁用了当前页面的返回功能，但是还是有双击退出app的功能
+	keyEventBind: {
+		backbutton: false  //关闭back按键监听
+	}
+});
 				
 		mui.plusReady(function () {
 		    //定义子页面数组

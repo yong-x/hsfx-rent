@@ -43,3 +43,15 @@
 	justify-content: center;
 	align-items: center;				
 }
+/*详情页面中文本字体样式*/
+.content-text{
+				font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+				color: #333;
+				line-height: 24px;
+				font-size: 15px;
+				word-wrap: break-word;
+				overflow: hidden;
+}
+[v-cloak] { /*vue渲染时闪现遮罩*/ 
+		      display: none;
+}

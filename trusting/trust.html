@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/common.css"/>		
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">托管详情</h1>
+		</header>
+		<div id="main-content" class="mui-content" v-cloak>
+			<div class="mui-card" :data-trustid="trust.trustingid">
+				<div class="mui-card-header" style="font-size: 20px;font-weight: bold;"><span>{{trust.trusting_publisher}}</span><p>发布于 {{trust.publish_time}}</p></div>
+				<div class="mui-card-content">
+					<div class="mui-card-content-inner">
+						<h4 style="margin-bottom: 15px;">求租房源详情</h4>
+						<p class="content-text">{{trust.trusing_detail}}</p>
+					</div>					
+				</div>
+				<div class="mui-card-footer" style="font-size: 20px;">
+					<label>最高月租金:&nbsp;<span style="color: red;">￥{{trust.price_monthly}}</span></label>				
+					<span id="publisher-phone" @tap=dialing(trust.publisher_phone,$event) class="mui-icon mui-icon-phone" style="color: #2AC845;font-size: 20px;">{{trust.publisher_phone}}</span>					
+				</div>
+			</div>
+		</div>
+		
+		
+		<script src="../js/mui.js"></script>
+		<script src="../js/vue.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			mui.plusReady(function () {
+			   
+			   var vm = new Vue({
+				   el: '#main-content',
+				   data:{
+					   trust: {}
+				   },
+				   methods:{
+					  dialing(phoneNumber,event){  //点击电话号码时，进行拨号
+						  //mui.toast(phoneNumber+'  +++++  '+JSON.stringify(event.target))
+						  plus.device.dial(phoneNumber, true);	//拨号
+					  } 
+				   },
+				   created() {
+				   	//1、获取当前webview
+				   	var curWebview = plus.webview.currentWebview()				
+				   	//2、根据当前webview，获取openWindow方法调用打开本窗口时的传递的参数extras,vue自动渲染页面
+				   	this.trust = curWebview.trust			   						 
+				   } 
+			   })			   			   			  			   
+			})
+		</script>
+	</body>
+
+</html>

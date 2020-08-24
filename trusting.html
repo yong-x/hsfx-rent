@@ -13,11 +13,7 @@
 		<link rel="stylesheet" type="text/css" href="css/mui.picker.min.css" />
 		
 		
-		<style>
-		    [v-cloak] { /*vue渲染时闪现遮罩*/ 
-		      display: none;
-		    }
-		</style>
+		
 	</head>
 
 
@@ -71,7 +67,7 @@
 			</div>
 			<!-- 主体内容区域 -->
 			<div id="content" class="mui-content">
-				<div v-for="(trusing, index) in trusingList" v-cloak class="mui-card" :data-index="index">
+				<div v-for="(trusing, index) in trusingList" v-cloak class="mui-card" @tap="goTrustingDetail(index,$event)" :data-index="index">
 					<div class="mui-card-header" style="font-size: 20px;"><span>{{trusing.trusting_publisher}}</span><p>发布于 {{trusing.publish_time}}</p></div>
 					<div class="mui-card-content">
 						<div class="mui-card-content-inner">
@@ -114,6 +110,30 @@
 					getEndTime(){   //弹出搜索表单的结束时间项
 						return mui('#end-time')[0].value
 					},
+					goTrustingDetail(index,e){
+						//mui.toast(index+' +++++ '+JSON.stringify(e.target))
+						mui.openWindow({
+						    url:'trusting/trust.html',
+						    id:'trusting/trust.html',					    
+						    extras:{
+						      trust: this.trusingList[index]
+						    },
+						    createNew:false,//是否重复创建同样id的webview，默认为false:不重复创建，直接显示
+						    show:{
+						      autoShow:true,//页面loaded事件发生后自动显示，默认为true
+						      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+						      duration:200//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+						    },
+						    waiting:{
+						      autoShow:true,//自动显示等待框，默认为true
+						      title:'正在加载...',//等待对话框上显示的提示内容						      
+						    }
+						})
+						
+						
+						
+						
+					},
 					search(){  //按搜索时进行搜索，根据搜索表单向服务器请求数据						
 						//mui.toast(this.min_price+' + '+this.max_price+' + '+ this.getStartTime()+' + '+this.getEndTime())
 						myaxios.post(
@@ -143,13 +163,13 @@
 					
 				},
 				mounted() {
-					/*1、头部搜索图标点击时，弹出搜索表单*/
+					/*1、点击头部搜索图标时，弹出搜索表单*/
 					document.getElementById('openPopover').addEventListener('tap',function(){
 						mui('#popover-search-form').popover('show')
 					})
 					/*2、获取表单中所有时间选择器控件，用自定义函数绑定相应事件回调函数，点击该元素弹出时间选择器*/
 					bindingDataPicker('.date-picker',mui)
-					/*3、头部加号图标点击时，弹出添加托管新窗口*/
+					/*3、点击头部加号图标时，弹出添加托管新窗口*/
 					document.getElementById('add').addEventListener('tap',function(){
 						mui.openWindow({
 						    url:'trusting/newtrust.html',
@@ -167,6 +187,8 @@
 						    }
 						})
 					})
+					
+					/*4、点击卡片*/
 				}
 			})
 		})
