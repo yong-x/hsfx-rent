@@ -46,7 +46,7 @@
 			<form class="mui-input-group">
 				<div class="mui-input-row">
 					<label>手&nbsp;&nbsp;机&nbsp;&nbsp;号</label>
-					<input id='account' type="text" class="mui-input-clear mui-input" placeholder="请输入账号">
+					<input id='phone' type="text" class="mui-input-clear mui-input" placeholder="请输入一个有效的手机号作为账号">
 				</div>
 				
 				<div class="mui-input-row">
@@ -55,7 +55,7 @@
 				</div>
 				<div class="mui-input-row">
 					<label>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码</label>
-					<input id='password' type="password" class="mui-input-clear mui-input" placeholder="请输入密码">
+					<input id='password' type="password" class="mui-input-clear mui-input" placeholder="密码为6至18位大小写字母与数字组合">
 				</div>
 				<div class="mui-input-row">
 					<label>确认密码</label>
@@ -68,22 +68,56 @@
 		</div>
 		
 		
-		<script src="js/mui.js"></script>
+		<script src="js/mui.js"></script>		
+		<!-- axios网络请求插件，方便进行异步操作 -->
+		<script src="js/axios/axios.min.js"></script>
+		<!-- 自定义网络请求对象myaxios,  对所有axios请求进行一些公共配置 -->
+		<script src="js/my-http-axios.js"></script>
+		<!-- 数据格式校验插件 -->
 		<script src="js/validateData.js"></script>
-		
+		<!-- MD5插件 -->
+		<script src="js/md5.min.js"></script>
+		<!-- 自定义密码加密方法 -->
+		<script src="js/my-md5.js"></script>
 		<script type="text/javascript">
 			mui.init()
 			mui.plusReady(function () {
-			    document.getElementById('reg').addEventListener('tap',function(){
-					var accountBox = document.getElementById('account').value;
-					var passwordBox = document.getElementById('password').value;
-					var passwordConfirmBox = document.getElementById('password_confirm').value;
-					var emailBox = document.getElementById('email').value;
-					var checkPhoneAccount = validate.TestByType({type:'phone',notEmpty:true},accountBox)
-					var checkEmail = validate.TestByType({type:'mail',notEmpty:true},emailBox)
-										
-					console.log(checkPhoneAccount+'  +++  '+checkEmail)
-					//plus.nativeUI.toast('密码两次输入不一致');
+			    document.getElementById('reg').addEventListener('tap',function(){															
+					var phone = document.getElementById('phone').value;
+					var username = document.getElementById('username').value;
+					var password = document.getElementById('password').value;
+					var password_confirm = document.getElementById('password_confirm').value;
+					if(!validate.TestByType({type:'phone',notEmpty:true},phone)){
+						mui.toast('手机号格式不合法')
+						return
+					}
+					if((!validate.TestByType({type:'passwd',notEmpty:true},password))
+						||(password.length<6||password.length>18)){
+						mui.toast('密码格式不合法')
+						return
+					}
+					if(password!==password_confirm){
+						mui.toast('两次输入密码不一致')
+						return
+					}
+					//向服务器发起注册请求
+					myaxios.post('/user/register',
+					{
+						phone:phone,
+						username:username,
+						password:mymd5.hash(password,phone,md5)
+					})
+					.then(function (res) {
+						console.log(JSON.stringify(res));
+					    if(res.meta.code!=200){ //注册失败
+							mui.toast(res.meta.msg)
+							return
+						}else{  //注册成功
+							mui.toast(res.meta.msg)
+							mui.back()
+							return
+						}											
+					  })					
 				})
 			})
 		</script>

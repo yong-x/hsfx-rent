@@ -99,14 +99,14 @@
 			<form id='login-form' class="mui-input-group">
 				<div class="mui-input-row">
 					<label>手机号</label>
-					<input id='account' type="text" class="mui-input-clear mui-input" placeholder="请输入手机号">
+					<input id='phone' type="number" class="mui-input-clear mui-input" placeholder="请输入手机号">
 				</div>
 				<div class="mui-input-row">
 					<label>密&nbsp;&nbsp;&nbsp;&nbsp;码</label>
 					<input id='password' type="password" class="mui-input-clear mui-input" placeholder="请输入密码">
 				</div>
 			</form>
-			<form class="mui-input-group">
+			<!-- <form class="mui-input-group">
 				<ul class="mui-table-view mui-table-view-chevron">
 					<li class="mui-table-view-cell">
 						自动登录
@@ -115,7 +115,7 @@
 						</div>
 					</li>
 				</ul>
-			</form>
+			</form> -->
 			<div class="mui-content-padded">
 				<button id='login' class="mui-btn mui-btn-block mui-btn-primary">登录</button>
 				<div class="link-area"><a id='reg'>注册账号</a> <span class="spliter">|</span> <a id='forgetPassword'>忘记密码</a>
@@ -130,12 +130,48 @@
 		
 		
 		<script src="js/mui.js"></script>
+		
+		
+		
+		
+		<!-- axios网络请求插件，方便进行异步操作 -->
+		<script src="js/axios/axios.min.js"></script>
+		<!-- 自定义网络请求对象myaxios,  对所有axios请求进行一些公共配置 -->
+		<script src="js/my-http-axios.js"></script>
+		<!-- 数据格式校验插件 -->
+		<script src="js/validateData.js"></script>
+		<!-- MD5插件 -->
+		<script src="js/md5.min.js"></script>
+		<!-- 自定义密码加密方法 -->
+		<script src="js/my-md5.js"></script>
+		<!-- 自定义公共api -->
+		<script src="js/commos-api.js"></script>
+		
+		
 		<script type="text/javascript">
+			
+			
+			
+			
+			
 			mui.init({
 					statusBarBackground: '#f7f7f7'
 				})
+										
 			mui.plusReady(function () {
-			    document.getElementById('reg').addEventListener('tap',function(){
+			   /*检查是否登录过，即localStorage中是否保存有用户的登录信息*/
+				(function(){
+					let userJson = localStorage.getItem('user')
+					mui.toast(userJson)
+					if(userJson){ //已经保存有登录用户信息，则登录页直接跳转首页					
+						commonAPI.openWindow(mui,'index.html',null)															
+						return
+					}		
+				})()
+				
+				
+				/*1、点击注册时跳转登录webview*/
+				document.getElementById('reg').addEventListener('tap',function(){
 					mui.openWindow({
 					    url:'regster.html',
 					    id:'regster.html',					    					    
@@ -152,23 +188,53 @@
 					})	
 						
 				})
-			
-				document.getElementById('login').addEventListener('tap',function(){			
-					mui.openWindow({
-					    url:'index.html',
-					    id:'index.html',					    					    
-					    createNew:false,//是否重复创建同样id的webview，默认为false:不重复创建，直接显示
-					    show:{
-					      autoShow:true,//页面loaded事件发生后自动显示，默认为true
-					      aniShow:"pop-in",//页面显示动画，默认为”slide-in-right“；
-					      duration:100 //页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
-					    },
-					    waiting:{
-					      autoShow:true,//自动显示等待框，默认为true
-					      title:'正在加载...',//等待对话框上显示的提示内容					     
-					    }
+				/*2、点击登录时向服务器验证数据，登录成功时记住登录状态*/
+				document.getElementById('login').addEventListener('tap',function(){	
+					/*测试sessionStorage不能跨webView,而localStorage和plus.storage可以跨webView进行持久化存储*/
+					/*
+					sessionStorage.setItem('sessionStorage_key','sessionStorage_value')					
+					plus.storage.setItem("plus_storage_key","plus_storage_value");
+					*/
+					let phone = document.getElementById('phone').value
+					let password = document.getElementById('password').value
+					if(!validate.TestByType({type:'phone',notEmpty:true},phone)){
+						mui.toast('手机号格式错误，请重新输入')
+						return
+					}
+					if(!validate.TestByType({type:'passwd',notEmpty:true},password)){
+						mui.toast('密码格式错误，请重新输入')
+						return
+					}					
+					let passwordHash = mymd5.hash(password,phone,md5) //MD5固定盐值多次加密
+				
+					//向服务器发起登录请求
+					myaxios.post('/user/login',
+					{
+						phone:phone,
+						password:passwordHash,
 					})
-					//plus.webview.currentWebview().close("none");
+					.then(function (res) {
+					    console.log(JSON.stringify(res));
+						if(res.meta.code!=200){ //1、用户不存在或密码错误
+							mui.toast(res.meta.msg)
+						}else{ 					//2、登录成功
+							localStorage.setItem('user',JSON.stringify(res.data.user))
+							mui.openWindow({
+							    url:'index.html',
+							    id:'index.html',					    					    
+							    createNew:false,
+							    show:{
+							      autoShow:true,
+							      aniShow:"pop-in",
+							      duration:100 
+							    },
+							    waiting:{
+							      autoShow:true,
+							      title:'正在加载...'			     
+							    }
+							})
+						}						
+					  })															
 				})
 				
 			})

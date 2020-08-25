@@ -52,7 +52,13 @@
 		<script type="text/javascript">
 			mui.init()
 			mui.plusReady(function () {
-			    document.getElementById('submit').addEventListener('tap',function(){
+			   var ss = sessionStorage.getItem('sessionStorage_key')
+			   var ls = localStorage.getItem('localStorage_key')
+			   var ps = plus.storage.getItem("plus_storage_key");
+			   mui.toast('ss: '+ss +'  ;ls: '+ls+' ;  ps:'+ps)
+			   
+			   
+				document.getElementById('submit').addEventListener('tap',function(){
 					let taglist = mui('#taglist')[0].value
 					let demand_detail = mui('#demand_detail')[0].value
 					let price_monthly = mui('#price_monthly')[0].value

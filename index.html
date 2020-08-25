@@ -4,22 +4,48 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
     <title></title>
-    <script src="js/mui.min.js"></script>
+   
     <link href="css/mui.min.css" rel="stylesheet"/>
 	<!-- 阿里字体图标库 -->
 	<link rel="stylesheet" type="text/css" href="fonts/ali-iconfont/iconfont.css"/>
     
 	
+	
+	
+</head>
+<body>
+	
+	<!-- 子页面公共模板，内容通过webview方式动态从子页面加载显示 -->
+	
+	<!-- 子页面公共底导航选项卡 -->
+	<nav class="mui-bar mui-bar-tab">
+		<a class="mui-tab-item mui-active" href="renting.html">
+			<span class="mui-icon mui-icon-home"></span>
+			<span class="mui-tab-label">租房</span>
+		</a>
+		<a class="mui-tab-item" href="demanding.html">
+			<span class="mui-icon iconfont icon-demand"></span>
+			<span class="mui-tab-label">求租</span>
+		</a>
+		<a class="mui-tab-item" href="trusting.html">
+			<span  class="mui-icon iconfont icon-tuoguan" ></span>
+			<span class="mui-tab-label">托管</span>
+		</a>
+		<a class="mui-tab-item" href="mine.html">
+			<span class="mui-icon mui-icon-person"></span>
+			<span class="mui-tab-label">我的</span>
+		</a>
+		
+	</nav>
+	<script src="js/mui.min.js"></script>	
+	<script src="js/commos-api.js"></script>	
 	<script type="text/javascript" charset="utf-8">
-      	mui.init({
-	//该属性禁用了当前页面的返回功能，但是还是有双击退出app的功能
-	keyEventBind: {
-		backbutton: false  //关闭back按键监听
-	}
-});
+	  	mui.init();
 				
 		mui.plusReady(function () {
-		    //定义子页面数组
+		    //检查登录状态，没有登录则跳转到登录webview
+			commonAPI.checkLogin()									
+			//定义子页面数组
 			var subPages=['renting.html','demanding.html','trusting.html','mine.html']
 			//定义子页面样式,一般要设置上下外边距使其不遮挡父页面的头部和底部
 			var subPageStyle={
@@ -54,32 +80,6 @@
 				plus.webview.show(webViewId)
 			})
 		})
-    </script>
-	
-</head>
-<body>
-	
-	<!-- 子页面公共模板，内容通过webview方式动态从子页面加载显示 -->
-	
-	<!-- 子页面公共底导航选项卡 -->
-	<nav class="mui-bar mui-bar-tab">
-		<a class="mui-tab-item mui-active" href="renting.html">
-			<span class="mui-icon mui-icon-home"></span>
-			<span class="mui-tab-label">租房</span>
-		</a>
-		<a class="mui-tab-item" href="demanding.html">
-			<span class="mui-icon iconfont icon-demand"></span>
-			<span class="mui-tab-label">求租</span>
-		</a>
-		<a class="mui-tab-item" href="trusting.html">
-			<span  class="mui-icon iconfont icon-tuoguan" ></span>
-			<span class="mui-tab-label">托管</span>
-		</a>
-		<a class="mui-tab-item" href="mine.html">
-			<span class="mui-icon mui-icon-person"></span>
-			<span class="mui-tab-label">我的</span>
-		</a>
-		
-	</nav>
+	</script>
 </body>
 </html>

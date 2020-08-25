@@ -24,6 +24,12 @@
 		<script src="../js/mui.js"></script>
 		<script type="text/javascript">
 			mui.init()
+			mui.plusReady(function () {
+			    var ss = sessionStorage.getItem('sessionStorage_key')
+			    var ls = localStorage.getItem('localStorage_key')
+			    var ps = plus.storage.getItem("plus_storage_key");
+			    mui.toast('ss: '+ss +'  ;ls: '+ls+' ;  ps:'+ps)
+			})
 		</script>
 	</body>
 

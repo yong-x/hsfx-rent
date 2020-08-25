@@ -5,7 +5,7 @@
  * 是否可为空 Emptable: true(true可为空，false不能为空；默认为false)
  * 正则匹配 regexp( 内容与该正则进行验证,type需要为reg,否则无效 validatessage 错误提示信息 )  type为reg时必填
  * 失败提示内容validatessage: String type为reg/notNull时必填
- * 例子：{type:phone,notEmpty:true}
+ * 例子：{type:'phone',notEmpty:true}
  * @constructor
  */
 
