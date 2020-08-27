@@ -16,52 +16,57 @@
 
 
 	<body>
-		<div id="main-content">
+	<!-- 在使用mui下拉刷新和下拉加载时，如果与vue框架结合使用的话，mui管理的刷新容器必须作为vue管理的容器的父容器。
+	否则会报 TypeError: mui(...).pullRefresh(...).endPullupToRefresh is not a function. 的错误。	 
+	 -->	
+	 
+	<div id="refreshContainer">		<!--定义mui刷新容器， mui刷新容器必须作为vue容器的父容器 -->
+		<div id="main-content">		<!--定义vue容器， vue容器必须作为mui刷新容器的子容器 -->
 			
 		
-		<!-- 头部区域 -->
-		<header class="mui-bar mui-bar-nav">
-			<a class=" mui-icon mui-icon-closeempty  mui-pull-left"></a>
-			<h1 class="mui-title">房屋出租</h1>
-			
-			<!-- 右侧加号图标 -->
-			<a id="add" href="javascript:;" class="right-add">
-				<span  class="mui-icon mui-icon-plusempty"></span>			
-			</a>
-			<!-- 右侧搜索图标 -->
-			<a href="#popover" id="openPopover" class="right-search">
-				<span  class="mui-icon mui-icon-search"></span>			
-			</a>			
-		</header>
-		<!-- 弹出搜索表单区内容 -->
-		<div id="popover-search-form" class="mui-popover condition-serach-form" >
-		  <form class="mui-input-group">
-		  	<div class="mui-input-row">
-		  		<label>关&nbsp;&nbsp;键&nbsp;&nbsp;词</label>
-		  		<input type="text" class="mui-input-clear" placeholder="请输入房屋关键词">
-		  	</div>
-			<div class="mui-input-row">
-		  		<label>月&nbsp;&nbsp;租&nbsp;&nbsp;金</label>
-		  		<input type="number" class="mui-input-clear" placeholder="最低租金">
-		  		<input type="number" class="mui-input-clear" placeholder="最高租金">
-		  	</div>
-			<div class="mui-input-row">
-		  		<label>发布时间</label>
-		  		<input type="text" class="mui-input-clear date-picker" placeholder="起始时间">
-		  		<input type="text" class="mui-input-clear date-picker" placeholder="结束时间">
-		  	</div>
-			<div class="mui-input-row" style="display: flex;justify-content: space-around;">
-		  		<button type="button" class="mui-btn mui-btn-blue form-btn">搜索</button>
-		  		<button type="button" class="mui-btn mui-btn-grey form-btn">重置</button>
-		  	</div>
-		  </form>
-		</div>				<!-- 主体内容占位区，等待渲染 -->
-		<div id="content" class="mui-content">			
+			<!-- 头部区域 -->
+			<header  class="mui-bar mui-bar-nav">
+				<a class=" mui-icon mui-icon-closeempty  mui-pull-left"></a>
+				<h1 class="mui-title">房屋出租</h1>
+				
+				<!-- 右侧加号图标 -->
+				<a id="add" href="javascript:;" class="right-add">
+					<span  class="mui-icon mui-icon-plusempty"></span>			
+				</a>
+				<!-- 右侧搜索图标 -->
+				<a href="#popover" id="openPopover" class="right-search">
+					<span  class="mui-icon mui-icon-search"></span>			
+				</a>			
+			</header>
+			<!-- 弹出搜索表单区内容 -->
+			<div id="popover-search-form" class="mui-popover condition-serach-form" >
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<label>关&nbsp;&nbsp;键&nbsp;&nbsp;词</label>
+					<input v-model="tag" type="text" class="mui-input-clear" placeholder="请输入房屋关键词">
+				</div>
+				<div class="mui-input-row">
+					<label>月&nbsp;&nbsp;租&nbsp;&nbsp;金</label>
+					<input v-model="min_price" type="number" class="mui-input-clear" placeholder="最低租金">
+					<input v-model="max_price" type="number" class="mui-input-clear" placeholder="最高租金">
+				</div>
+				<div class="mui-input-row">
+					<label>发布时间</label>
+					<input id="start-time"  readonly="true" type="text" class="mui-input-clear date-picker" placeholder="起始时间">
+					<input id="end-time"    readonly="true" type="text" class="mui-input-clear date-picker" placeholder="结束时间">
+				</div>
+				<div class="mui-input-row" style="display: flex;justify-content: space-around;">
+					<button @tap="selectByForm(true)" type="button" class="mui-btn mui-btn-blue form-btn">搜索</button>
+					<button @tap="resetForm" type="button" class="mui-btn mui-btn-grey form-btn">重置</button>
+				</div>
+			</form>
+			</div>					<!-- 主体内容区 -->
+			<div id="content" class="mui-content">			
 			<div v-cloak @tap="toDetail(index,$event)" class="mui-card" v-for="(house, index) in houseList" class="mui-card" :data-index="index">
 				<div class="mui-card-header" style="font-size: 20px;"><span>{{house.publisher}}</span><p>发布于 {{house.publish_time}}</p></div>
 				<div class="mui-card-content">
 					<div class="mui-card-content-inner">		
-						<img v-if = "house.imglist && house.imglist.length>0" :src="house.imglist[0]" style="width: 100%;">						
+						<img v-if = "house.imglist && house.imglist.length>0" :src="getImgSrc(house.imglist[0])" style="width: 100%;">						
 						<span   v-for="(tag,tag_index) in house.taglist" class="mui-badge" :class="tagStyle(tag_index)">{{tag}}</span>								
 					</div>
 				</div>
@@ -70,8 +75,9 @@
 				</div>
 			</div>		
 		</div>
-		</div>
 		
+		</div>
+	</div>
 		
 		
 		
@@ -81,57 +87,93 @@
 		<script src="js/mui.picker.min.js"></script>		
 		<!-- 自定义时间选择器控件插件 -->
 		<script src="js/my-date-picker.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/axios/axios.js" type="text/javascript" charset="utf-8"></script>
 		<!-- 自定义公共api -->
-		<script src="js/commos-api.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/common-api.js" type="text/javascript" charset="utf-8"></script>		
 		<!-- vue核心 -->
 		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
 		
 		
 		<script type="text/javascript">
+			let _vm={} //对vue根组件进行引用，方便调用它的方法
+			/*刷新容器下拉时，点击搜索表单搜索和点击搜索表单重置时，都需要从服务器请求最新数据*/
+			function pullDownRefresh(){
+					_vm.pageNumber = 1;					
+					_vm.retrieve(false).then(function(dataLength){
+						if(dataLength===0){
+							mui.toast('没有检索到数据')
+						}else{
+							mui.toast('刷新成功')
+						}
+						mui('#refreshContainer').pullRefresh().endPulldownToRefresh(true);
+						mui('#refreshContainer').pullRefresh().refresh(true); //重置刷新容器，使可以继续上拉加载						
+					}).catch(function(){
+						mui('#refreshContainer').pullRefresh().endPulldownToRefresh(true);
+						mui('#refreshContainer').pullRefresh().refresh(true);  //重置刷新容器，使可以继续上拉加载
+					})													 
+			} 
+			/*刷新容器上拉时，从服务器加载下一页数据*/
+			function pullUpLoading(){				
+				_vm.pageNumber ++
+				_vm.retrieve(false).then(function(dataLength){
+					if(dataLength<_vm.pageSize){ //加载到的数据长度小于页面大小，说明加载到了最后一页
+						mui('#refreshContainer').pullRefresh().endPullupToRefresh(true);
+					}else{
+						mui('#refreshContainer').pullRefresh().endPullupToRefresh(false);
+						//mui.toast('加载成功')
+					}					
+				}).catch(function(){
+					mui('#refreshContainer').pullRefresh().endPullupToRefresh(true);					
+				})																					 
+			} 
+			
+			mui.init({				
+				 pullRefresh : {
+				    container:"#refreshContainer",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+				    down : {
+				      style:'circle',//必选，下拉刷新样式，目前支持原生5+ ‘circle’ 样式
+				      color:'#2BD009', //可选，默认“#2BD009” 下拉刷新控件颜色
+				      height:'50px',//可选,默认50px.下拉刷新控件的高度,
+				      range:'100px', //可选 默认100px,控件可下拉拖拽的范围
+				      offset:'0px', //可选 默认0px,下拉刷新控件的起始位置
+				      auto: false,//可选,默认false.首次加载自动下拉刷新一次
+				      callback :pullDownRefresh//必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+				    },
+					up : {
+					      height:50,//可选.默认50.触发上拉加载拖动距离
+					      auto:false,//可选,默认false.自动上拉加载一次
+					      contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+					      contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+					      callback :pullUpLoading //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+					}
+				   }
+			})						
 			
 			
-			mui.init()			
-			mui.plusReady(function(){								
+			mui.plusReady(function(){																
 				var vm = new Vue({
 					el:'#main-content',
 					data:{
-						houseList:  [  //展示的房屋列表
-							{
-								houseid: 1,
-								publisher:'李先生',
-								publisher_phone: '13433895627',
-								publish_time:'2019-10-06',
-								price_monthly: 998,
-								house_address:'武汉市洪山区南湖幸福湾公园',
-								house_detail:'房屋位于华师附小旁，二室一厅，三楼独立公寓，欢迎有需要的朋友与我联系',
-								imglist:['img/01.jpg','img/02.jpg','img/03.jpg','img/04.jpg'],
-								taglist:['朝阳','独立卫生间','免费停车场','独立厨房','精装修','交通方便']
-							},
-							{
-								houseid: 2,
-								publisher:'张先生',
-								publisher_phone: '13433355627',
-								publish_time:'2020-08-06',
-								price_monthly:1299,
-								house_address:'武汉市洪山区珞狮路幸福小区b座311室',
-								house_detail:'房屋位于华师附小旁，二室一厅，三楼独立公寓，欢迎有需要的朋友与我联系',
-								imglist:['img/02.jpg','img/03.jpg','img/04.jpg'],
-								taglist:['朝阳','独立卫生间','免费停车场','独立厨房','精装修','交通方便']
-							},
-							{
-							houseid: 3,
-							publisher:'张先生',
-							publisher_phone: '15868895627',
-							publish_time:'2020-08-20',
-							price_monthly:1999,
-							house_address:'武汉市洪山区珞狮路幸福小区b座311室',
-							house_detail:'房屋位于华师附小旁，二室一厅，三楼独立公寓，欢迎有需要的朋友与我联系',
-							imglist:[],
-							taglist:['朝阳','独立卫生间','免费停车场','独立厨房','精装修','交通方便']
-						}							
-						]
+						houseList:  [], //正在展示的房屋列表						
+						pageNumber: 1,  //当前正在展示的最大页码，初始值为1，上拉加载时此值+1 ;下拉刷新时此值设置为1
+						pageSize: 5,  //页面大小，每次请求5条数据					
+						/*搜索表单内容*/
+						tag: '',
+						min_price: '',
+						max_price: ''
 					},
+					
 					methods:{
+						/*时间选择器表单项由于用外部插件赋值所以无法像min_price和max_price一样用v-model双向绑定，所以这里用方法来获取*/
+						getStartTime(){ //弹出搜索表单的开始时间项
+							return mui('#start-time')[0].value
+						},
+						getEndTime(){   //弹出搜索表单的结束时间项
+							return mui('#end-time')[0].value
+						},
+						getImgSrc(OriginImgSrc){  //拼接图片完整路径
+							return commonAPI.imgServer+OriginImgSrc;
+						},
 						tagStyle(tag_index){ //根据标签索引计算标签样式的方法
 							let r = tag_index%5;
 							let class_style = ''
@@ -147,23 +189,74 @@
 						toDetail(house_index,event){ //每个mui-card被点击时跳转详情页方法
 							//打开房屋详情页面
 							commonAPI.openWindow(mui,'renting/house.html',{house: this.houseList[house_index]})
-						}
-						
-					
+						},
+						retrieve(showServerMsg){  //检索数据，根据表单参数和pageNumber、pageSize值来对houseList进行更新
+							let _self=this
+							console.error('搜索表单参数=>  '+this.tag+' + '+this.min_price+' + '+this.max_price+' + '+ this.getStartTime()+' + '+this.getEndTime())
+							//用Promise方便外部链式调用
+							return new Promise(function (resolve, reject) {
+								commonAPI.myaxios(axios).post(
+									`/house/retrieve`, 
+									{
+										tag: _self.tag,
+										min_price: _self.min_price,
+										max_price: _self.max_price,
+										start_time: _self.getStartTime(),
+										end_time: _self.getEndTime(),
+										pageNumber: _self.pageNumber,
+										pageSize: _self.pageSize
+									}
+									).then(function (res) {
+										 //服务器数据域，应该用于对绑定的数据trusingList进行赋值
+										 
+										console.log(JSON.stringify(res));
+										if(showServerMsg){
+											mui.toast(res.meta.msg,{ duration:'2000ms', type:'div' })
+										}
+										if(_self.pageNumber===1){ //当前为页面刷新或页面初始化操作,或者点击搜索或重置操作
+											_self.houseList=res.data.houseList
+										}else{                   //当前为上拉加载请求下一页数据
+											_self.houseList=_self.houseList.concat(res.data.houseList)
+										}										
+										mui('#popover-search-form').popover('hide') //隐藏弹出搜索表单
+										resolve(res.data.houseList.length); 
+									  }).catch(function(){
+										 reject(); 
+									  })																
+							})												
+						},
+						selectByForm(is){ //直接按照表单数据作为参数刷新
+							pullDownRefresh()
+						},
+						resetForm(){  //重置搜索表单之后再刷新
+							this.pageNumber = 1							
+							this.tag = ''
+							this.min_price = ''
+							this.max_price = ''
+							mui('#start-time')[0].value=''
+							mui('#end-time')[0].value=''
+							pullDownRefresh()
+						}											
+					},
+					created() { //首次进入页面时检索数据并初始化houseList					
+						this.pageNumber = 1
+						this.retrieve(false);
 					},
 					mounted() {
+												
 						/*1、点击搜索图标时，显示搜索表单；点击遮罩部分时会自动隐藏搜索表单*/
 						document.getElementById('openPopover').addEventListener('tap',function(){
 							mui('#popover-search-form').popover('show')
 						})
 						/*2、获取表单中所有时间选择器控件	，用自定义函数绑定相应事件回调函数，点击该元素弹出时间选择器*/
-						bindingDataPicker('.date-picker',mui)
+						bindingDataPicker('.date-picker',mui,'#refreshContainer')
 						/*3、点击头部中加号时，打开添加房源窗口*/
 						document.getElementById('add').addEventListener('tap',function(){				
 							commonAPI.openWindow(mui,'renting/newhouse.html',null)					
 						})	
 					}
 				})			
+				_vm = vm
 			})
 		
 		

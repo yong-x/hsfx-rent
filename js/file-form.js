@@ -6,6 +6,17 @@
  * @author:cuihongbao@dcloud.io
  */
 (function() {
+	/*检查登录状态
+	*/
+	let userJson = localStorage.getItem('user')
+	console.error('已经保存的登录用户=>'+ userJson)
+	if(!userJson){ //如果用户没有登录则跳转登录					
+		commonAPI.openWindow(mui,'login.html',null)
+		return																					
+	}
+	//取出登录用户信息，方便下面取用
+	var user = JSON.parse(userJson)
+			
 	var index = 1;
 	var size = null;
 	var imageIndexIdNum = 0;
@@ -16,12 +27,14 @@
 		house_address:  document.getElementById('house_address'), 
 		price_monthly:  document.getElementById('price_monthly'), 
 		imageList: document.getElementById('imglist'),
-		publisher_phone: document.getElementById('publisher_phone'),
+		publisher_phone: user.phone+'', //后面上传时所有值必须为字符串
+		publisher_uid: user.uid+'',  //后面上传时所有值必须为字符串
 		submitBtn: document.getElementById('submit')
 	};
 	mui.toast(feedback.question)
 	//var url = 'https://service.dcloud.net.cn/feedback';
 	var url = 'http://10.0.2.2:3000/feedback';
+	var url = commonAPI.Server+'/house/add';
 	feedback.files = [];
 	feedback.uploader = null;  
 	feedback.deviceInfo = null; 
@@ -49,8 +62,7 @@
 		feedback.taglist.value = '';		
 		feedback.house_detail.value = '';		
 		feedback.house_address.value = '';		
-		feedback.price_monthly.value = '';		
-		feedback.publisher_phone.value = '';						
+		feedback.price_monthly.value = '';									
 		feedback.imageList.innerHTML = '';
 		feedback.newPlaceholder();
 		feedback.files = [];
@@ -135,10 +147,7 @@
 					placeholder.style.backgroundImage = 'url(' + zip.target + ')';
 				}, function(zipe) {
 					mui.toast('压缩失败！')
-				});
-				
-
-				
+				});				
 			}, function(e) {
 				mui.toast(e.message);
 			},{});
@@ -168,7 +177,8 @@
 			house_detail: feedback.house_detail.value,
 			house_address: feedback.house_address.value,
 			price_monthly: feedback.price_monthly.value,
-			publisher_phone: feedback.publisher_phone.value,			
+			publisher_phone: feedback.publisher_phone,			
+			publisher_uid: feedback.publisher_uid,								
 			images: feedback.files
 			
 		})) 
@@ -179,22 +189,25 @@
 		}, function(upload, status) {
 //			plus.nativeUI.closeWaiting()
 			console.log("upload cb:"+upload.responseText);
-			if(status==200){
-				var data = JSON.parse(upload.responseText);
+			var data = JSON.parse(upload.responseText);
+			if(status==200 && data.meta.code === 200){				
 				//上传成功，重置表单
-				if (data.ret === 0 && data.desc === 'Success') {
-//					mui.toast('上传成功~')
-					console.log("upload success");
-//					feedback.clearForm();
-				}
-			}else{
+				console.log("upload success");
+				mui.alert('上传房源信息成功',"确定",function () {
+					feedback.clearForm();
+					mui.back();
+				});													
+			}else{	//上传失败			
 				console.log("upload fail");
-			}
-			
+				mui.alert("服务器异常，发布失败","确定",function () {
+					feedback.clearForm();
+					mui.back();
+				});
+			}			
 		});
 		//添加上传数据
 		mui.each(content, function(index, element) {
-			if (index !== 'images') {
+			if (index !== 'images') {  
 				console.log("addData:"+index+","+element);
 //				console.log(index);
 				feedback.uploader.addData(index, element)
@@ -212,12 +225,7 @@
 		});
 				
 		//开始上传任务
-		feedback.uploader.start();
-		mui.alert("上传成功","确定",function () {
-			feedback.clearForm();
-			mui.back();
-		});
-//		plus.nativeUI.showWaiting();
+		feedback.uploader.start();				
 	};
 		
 })();

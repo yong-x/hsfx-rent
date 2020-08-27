@@ -18,6 +18,8 @@
 		<script src="../js/template-web.js"></script>
 		<!-- jquery -->
 		<script src="../js/jquery-1.11.3/jquery-1.11.3.js" type="text/javascript" charset="utf-8"></script>
+		<!-- 自定义公共api -->
+		<script src="../js/common-api.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			mui.init()
 			//根据其它页面打开本窗口时所传递的参数来渲染本页面
@@ -28,6 +30,10 @@
 				var house = curWebview.house
 				//3、根据参数从服务器发起请求渲染页面
 				var templateData = {house: house}
+				//4、图片的url需要与图片服务器地址进行拼接
+				house.imglist.forEach((img,index)=>{
+					house.imglist[index] = commonAPI.imgServer+img										
+				})
 				var househtml = template('test1', templateData)
 				$('#content').html(househtml)
 				//mui.toast(JSON.stringify(house))
@@ -57,7 +63,7 @@
 					<div class="mui-card-content">						
 						<div class="mui-card-content-inner">
 							{{each house.imglist img index }}
-								<img src="../{{img}}" style="width: 100%;">	
+								<img src="{{img}}" style="width: 100%;">	
 							{{/each}}												
 						</div>
 						<div class="mui-card-content-inner">

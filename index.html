@@ -6,6 +6,7 @@
     <title></title>
    
     <link href="css/mui.min.css" rel="stylesheet"/>
+    <link href="css/common.css" rel="stylesheet"/>
 	<!-- 阿里字体图标库 -->
 	<link rel="stylesheet" type="text/css" href="fonts/ali-iconfont/iconfont.css"/>
     
@@ -38,12 +39,12 @@
 		
 	</nav>
 	<script src="js/mui.min.js"></script>	
-	<script src="js/commos-api.js"></script>	
+	<script src="js/common-api.js"></script>	
 	<script type="text/javascript" charset="utf-8">
 	  	mui.init();
 				
-		mui.plusReady(function () {
-		    //检查登录状态，没有登录则跳转到登录webview
+		mui.plusReady(function () {		    			
+			//检查登录状态，没有登录则跳转到登录webview
 			commonAPI.checkLogin()									
 			//定义子页面数组
 			var subPages=['renting.html','demanding.html','trusting.html','mine.html']

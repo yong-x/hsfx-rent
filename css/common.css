@@ -6,7 +6,10 @@
 .mui-title,.mui-bar-nav a{
 	color: white;
 }
-
+/*内容区超出宽度时出现滚动条，默认会hidden*/
+.mui-content{
+	overflow: scroll !important;	
+}
 /* 设置头部区中搜索图标超链接样式靠右 */
 .mui-bar-nav .right-search{  
 	position: absolute;
@@ -55,3 +58,6 @@
 [v-cloak] { /*vue渲染时闪现遮罩*/ 
 		      display: none;
 }
+/* *{
+	touch-action: none;
+	} */

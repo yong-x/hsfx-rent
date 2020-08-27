@@ -39,18 +39,18 @@
 			<div class="mui-input-row">
 				<input id='price_monthly' type="number" class="mui-input-clear " placeholder="输入期望的月租金" />
 			</div>
-			<h4 class="row-title">房源图片(最多6张)</h4>
-			<div id='imglist' class="row image-list"></div>
-			<!-- 隐藏域提交用户的电话号，用于后端服务器识别当前上传用户 -->
-			<input id="publisher_phone" type="hidden" value="13298745689" />
+			<h4 class="row-title">房源图片(最多4张)</h4>
+			<div id='imglist' class="row image-list"></div>						
 			<button id="submit" type="button" class="mui-btn mui-btn-primary mui-btn-block" style="margin-top: 30px;">提交</button>
 		</div>
 	<script src="../js/mui.js"></script>	
 	<!-- 上传表单脚本，必须放在文档最下面才能有效 -->	
+	<script src="../js/common-api.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../js/file-form.js"></script>
 	<script type="text/javascript">
 		mui.init()	
 		mui('.mui-scroll-wrapper').scroll();
+		
 	</script>
 	</body>
 

@@ -41,13 +41,18 @@
 		</div>
 	<!-- 自定义公共api -->
 	<script src="js/mui.js"></script>
-	<script src="js/commos-api.js"></script>	
+	<script src="js/axios/axios.js"></script>
+	<script src="js/common-api.js"></script>	
 	<script type="text/javascript">
 		mui.init()
 		mui.plusReady(function () {
 		    document.getElementById('logout').addEventListener('tap',function(){
 				localStorage.clear()
-				commonAPI.openWindow(mui,'login.html',null)				
+				commonAPI.openWindow(mui,'login.html',null)	
+				commonAPI.myaxios(axios).get('/')
+				.then(function (res) {
+					console.log('测试：' + JSON.stringify(res))
+				})
 			})
 		})
 	</script>	

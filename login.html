@@ -21,13 +21,13 @@
 			}
 			
 			.mui-input-group label {
-				width: 22%;
+				width: 35%;
 			}
 			
 			.mui-input-row label~input,
 			.mui-input-row label~select,
 			.mui-input-row label~textarea {
-				width: 78%;
+				width: 65%;
 			}
 			
 			.mui-checkbox input[type=checkbox],
@@ -131,9 +131,6 @@
 		
 		<script src="js/mui.js"></script>
 		
-		
-		
-		
 		<!-- axios网络请求插件，方便进行异步操作 -->
 		<script src="js/axios/axios.min.js"></script>
 		<!-- 自定义网络请求对象myaxios,  对所有axios请求进行一些公共配置 -->
@@ -145,14 +142,10 @@
 		<!-- 自定义密码加密方法 -->
 		<script src="js/my-md5.js"></script>
 		<!-- 自定义公共api -->
-		<script src="js/commos-api.js"></script>
+		<script src="js/common-api.js"></script>
 		
 		
 		<script type="text/javascript">
-			
-			
-			
-			
 			
 			mui.init({
 					statusBarBackground: '#f7f7f7'
@@ -162,31 +155,17 @@
 			   /*检查是否登录过，即localStorage中是否保存有用户的登录信息*/
 				(function(){
 					let userJson = localStorage.getItem('user')
-					mui.toast(userJson)
+					console.error('已经保存的登录用户=>'+ userJson)
 					if(userJson){ //已经保存有登录用户信息，则登录页直接跳转首页					
-						commonAPI.openWindow(mui,'index.html',null)															
-						return
-					}		
+						commonAPI.openWindow(mui,'index.html',null)																					
+					}
+					return
 				})()
 				
 				
 				/*1、点击注册时跳转登录webview*/
 				document.getElementById('reg').addEventListener('tap',function(){
-					mui.openWindow({
-					    url:'regster.html',
-					    id:'regster.html',					    					    
-					    createNew:false,//是否重复创建同样id的webview，默认为false:不重复创建，直接显示
-					    show:{
-					      autoShow:true,//页面loaded事件发生后自动显示，默认为true
-					      aniShow:"slide-in-right",//页面显示动画，默认为”slide-in-right“；
-					      duration:100 //页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
-					    },
-					    waiting:{
-					      autoShow:true,//自动显示等待框，默认为true
-					      title:'正在加载...',//等待对话框上显示的提示内容					     
-					    }
-					})	
-						
+					commonAPI.openWindow(mui,'regster.html',null);						
 				})
 				/*2、点击登录时向服务器验证数据，登录成功时记住登录状态*/
 				document.getElementById('login').addEventListener('tap',function(){	
@@ -208,7 +187,7 @@
 					let passwordHash = mymd5.hash(password,phone,md5) //MD5固定盐值多次加密
 				
 					//向服务器发起登录请求
-					myaxios.post('/user/login',
+					commonAPI.myaxios(axios).post('/user/login',
 					{
 						phone:phone,
 						password:passwordHash,
@@ -219,20 +198,7 @@
 							mui.toast(res.meta.msg)
 						}else{ 					//2、登录成功
 							localStorage.setItem('user',JSON.stringify(res.data.user))
-							mui.openWindow({
-							    url:'index.html',
-							    id:'index.html',					    					    
-							    createNew:false,
-							    show:{
-							      autoShow:true,
-							      aniShow:"pop-in",
-							      duration:100 
-							    },
-							    waiting:{
-							      autoShow:true,
-							      title:'正在加载...'			     
-							    }
-							})
+							commonAPI.openWindow(mui,'index.html',null);							
 						}						
 					  })															
 				})

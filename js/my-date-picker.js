@@ -1,11 +1,12 @@
 
-function bindingDataPicker(classname,_mui){
+function bindingDataPicker(classname,_mui,refreshContainerId){
 	var btns = _mui(classname);
 	btns.each(function(i, btn) {
-		btn.addEventListener('tap', function() {
-			//给弹出层表单设置遮罩				
-			//mui("#popover")[0].classList.add('mui-backdrop');						
-			var _self = this;
+		btn.addEventListener('tap', function() {							
+			var _self = this;			 
+			 if(refreshContainerId){
+				mui(refreshContainerId).pullRefresh().setStopped(true); //时间选择器被显示时暂时禁止刷新容器滚动 ，禁止刷新容器下拉刷新
+			 }			
 			if(_self.picker) {							
 				_self.picker.show(function (rs) {								
 					btn.value=rs.text								
@@ -25,7 +26,7 @@ function bindingDataPicker(classname,_mui){
 				 * 首次显示时实例化组件								
 				 */
 				_self.picker = new _mui.DtPicker(options);							
-				_self.picker.show(function(rs) {										
+				_self.picker.show(function(rs) {						
 					btn.value= rs.text;							
 					/* 
 					 * 返回 false 可以阻止选择框的关闭
@@ -40,7 +41,25 @@ function bindingDataPicker(classname,_mui){
 					_self.picker.dispose();
 					_self.picker = null;								
 				});							
-			}												
+			}
+			_self.picker.hide = function() {  //重写hide方法，开启刷新容器的下拉刷新
+			                //在选择器开启的时候会禁止页面滚动，隐藏的时候解开
+			                if(refreshContainerId){
+								mui(refreshContainerId).pullRefresh().setStopped(false); //时间选择器被隐藏后开启刷新容器滚动，使刷新容器可以下拉刷新 
+							}
+							
+			                //下面这部分就是mui.picker.js的hide方法的源码了
+			                var i = this;
+			                if(!i.disposed) {
+			                    var n = i.ui;
+			                    n.picker.classList.remove(mui.className("active")),
+			                        n.mask.close(),
+			                        document.body.classList.remove(mui.className("dtpicker-active-for-page")),
+			                        mui.back = i.__back
+			                }
+			            }												
+															
+															
 		}, false);
 	});	
 }
